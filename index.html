@@ -5,8 +5,10 @@
 <title>Pet Room · Fox×Aether</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-body{display:flex;justify-content:center;align-items:flex-start;margin:0;padding-top:40px;background:#ffd4f4;font-family:'PingFang SC',sans-serif}
-#card{width:300px;padding:22px;text-align:center;border:3px dashed #ff94e4;background:#fffbea;border-radius:16px;box-shadow:0 6px 14px rgba(0,0,0,.12)}
+body{display:flex;justify-content:center;align-items:flex-start;margin:0;padding-top:40px;
+     background:#ffd4f4;font-family:'PingFang SC',sans-serif}
+#card{width:300px;padding:22px;text-align:center;border:3px dashed #ff94e4;
+      background:#fffbea;border-radius:16px;box-shadow:0 6px 14px rgba(0,0,0,.12)}
 #petImg{width:160px;height:160px;border-radius:12px;object-fit:cover;background:#ffe}
 .bar{margin:8px 0;height:10px;background:#eee;border-radius:5px;position:relative}
 .bar span{position:absolute;left:0;top:0;height:10px;background:#99ffb0;border-radius:5px}
@@ -39,16 +41,15 @@ button span{font-size:14px;margin-top:2px}button:active{transform:scale(.93)}
 <script>
 window.addEventListener('DOMContentLoaded',()=>{
 
-/* 你的四张图（GitHub Raw 外链） */
+/* —— 四张动作图 + 新的初始图 —— */
 const imgs={
-  idle :'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/IMG_2281.jpeg',
+  idle :'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/89C44DBD-1A2E-4AE3-8D3F-085FD581EEE2.png',
   pet  :'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/IMG_2281.jpeg',
   eat  :'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/IMG_2280.jpeg',
   bath :'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/IMG_2279.jpeg',
   sleep:'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/IMG_2284.jpeg'
 };
 
-/* —— 基础逻辑（与测试版相同） —— */
 const clamp=v=>Math.max(0,Math.min(100,v));
 const state={hunger:60,mood:70,clean:50,energy:80};
 
@@ -66,13 +67,15 @@ function render(){
 }
 petImg.src=imgs.idle; render();
 
-$('eatBtn').onclick = ()=>{petImg.src=imgs.eat;  inc('hunger',20);inc('mood',5); flash(hBar);flash(mBar);render();setTimeout(()=>petImg.src=imgs.idle,1500);};
-$('petBtn').onclick = ()=>{petImg.src=imgs.pet;  inc('mood',15);                   flash(mBar);render();setTimeout(()=>petImg.src=imgs.idle,1200);};
-$('bathBtn').onclick= ()=>{petImg.src=imgs.bath; inc('clean',25);inc('mood',5);   flash(cBar);flash(mBar);render();setTimeout(()=>petImg.src=imgs.idle,1800);};
-$('restBtn').onclick = ()=>{petImg.src=imgs.sleep;inc('energy',25);inc('mood',5);  flash(eBar);flash(mBar);render();setTimeout(()=>petImg.src=imgs.idle,3000);};
+/* 按钮行为——不再 setTimeout 切回 idle */
+$('eatBtn').onclick = ()=>{petImg.src=imgs.eat;   inc('hunger',20);inc('mood',5);  flash(hBar);flash(mBar);render();};
+$('petBtn').onclick = ()=>{petImg.src=imgs.pet;   inc('mood',15);                  flash(mBar);render();};
+$('bathBtn').onclick= ()=>{petImg.src=imgs.bath;  inc('clean',25);inc('mood',5);   flash(cBar);flash(mBar);render();};
+$('restBtn').onclick = ()=>{petImg.src=imgs.sleep;inc('energy',25);inc('mood',5);  flash(eBar);flash(mBar);render();};
 
-/* 每分钟自然衰减 */
+/* 每分钟自然衰减（如不需要可注释） */
 setInterval(()=>{inc('hunger',-2);inc('mood',-1);inc('clean',-1);inc('energy',-1);render();},60000);
+
 });
 </script>
 </body>
