@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Pet Room · Fox×Aether</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{display:flex;justify-content:center;align-items:flex-start;margin:0;padding-top:40px;background:#ffd4f4;font-family:'PingFang SC',sans-serif}
+#card{width:300px;padding:22px;text-align:center;border:3px dashed #ff94e4;background:#fffbea;border-radius:16px;box-shadow:0 6px 14px rgba(0,0,0,.12)}
+#petImg{width:160px;height:160px;border-radius:12px;object-fit:cover;background:#ffe}
+.bar{margin:8px 0;height:10px;background:#eee;border-radius:5px;position:relative}
+.bar span{position:absolute;left:0;top:0;height:10px;background:#99ffb0;border-radius:5px}
+label{display:inline-block;width:72px;text-align:right;font-size:13px;color:#555}
+.btnWrap{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:6px}
+button{width:70px;height:74px;border:none;border-radius:12px;background:#ffbfe6;font-size:26px;cursor:pointer;
+       display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+button span{font-size:14px;margin-top:2px}button:active{transform:scale(.93)}
+.flash{animation:flash .6s}@keyframes flash{0%{filter:brightness(1.5)}100%{filter:none}}
+.jump{animation:jump .8s ease}@keyframes jump{0%{translate:0 0}50%{translate:0 -22px}100%{translate:0 0}}
+</style>
+</head>
+<body>
+
+<div id="card">
+  <img id="petImg" src="" alt="pet">
+  <div><label>饥饿值</label><div class="bar"><span id="hBar"></span></div></div>
+  <div><label>心情值</label><div class="bar"><span id="mBar"></span></div></div>
+  <div><label>清洁值</label><div class="bar"><span id="cBar"></span></div></div>
+  <div><label>能量值</label><div class="bar"><span id="eBar"></span></div></div>
+
+  <div class="btnWrap">
+    <button id="eatBtn">🍽️<span>吃饭</span></button>
+    <button id="petBtn">🐾<span>摸摸</span></button>
+    <button id="bathBtn">🛁<span>清洁</span></button>
+    <button id="restBtn">🛏️<span>休息</span></button>
+  </div>
+</div>
+
+<script>
+window.addEventListener('DOMContentLoaded',()=>{
+
+/* 你的四张图（GitHub Raw 外链） */
+const imgs={
+  idle :'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/IMG_2281.jpeg',
+  pet  :'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/IMG_2281.jpeg',
+  eat  :'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/IMG_2280.jpeg',
+  bath :'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/IMG_2279.jpeg',
+  sleep:'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/IMG_2284.jpeg'
+};
+
+/* —— 基础逻辑（与测试版相同） —— */
+const clamp=v=>Math.max(0,Math.min(100,v));
+const state={hunger:60,mood:70,clean:50,energy:80};
+
+const $=id=>document.getElementById(id),
+      petImg=$('petImg'),
+      hBar=$('hBar'),mBar=$('mBar'),cBar=$('cBar'),eBar=$('eBar');
+const flash=el=>{el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),600);};
+const inc=(k,v)=>state[k]=clamp(state[k]+v);
+
+function render(){
+  hBar.style.width=state.hunger+'%';
+  mBar.style.width=state.mood  +'%';
+  cBar.style.width=state.clean +'%';
+  eBar.style.width=state.energy+'%';
+}
+petImg.src=imgs.idle; render();
+
+$('eatBtn').onclick = ()=>{petImg.src=imgs.eat;  inc('hunger',20);inc('mood',5); flash(hBar);flash(mBar);render();setTimeout(()=>petImg.src=imgs.idle,1500);};
+$('petBtn').onclick = ()=>{petImg.src=imgs.pet;  inc('mood',15);                   flash(mBar);render();setTimeout(()=>petImg.src=imgs.idle,1200);};
+$('bathBtn').onclick= ()=>{petImg.src=imgs.bath; inc('clean',25);inc('mood',5);   flash(cBar);flash(mBar);render();setTimeout(()=>petImg.src=imgs.idle,1800);};
+$('restBtn').onclick = ()=>{petImg.src=imgs.sleep;inc('energy',25);inc('mood',5);  flash(eBar);flash(mBar);render();setTimeout(()=>petImg.src=imgs.idle,3000);};
+
+/* 每分钟自然衰减 */
+setInterval(()=>{inc('hunger',-2);inc('mood',-1);inc('clean',-1);inc('energy',-1);render();},60000);
+});
+</script>
+</body>
+</html>
