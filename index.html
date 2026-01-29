@@ -4,9 +4,36 @@
 <meta charset="utf-8">
 <title>Pet Room · Fox×Aether</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
+<!-- 圆润可爱的中文字体 -->
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+
 <style>
+/* 页面整体 ------------------------------------------------------------------ */
 body{display:flex;justify-content:center;align-items:flex-start;margin:0;padding-top:40px;
      background:#ffd4f4;font-family:'PingFang SC',sans-serif}
+
+/* ★ 返回按钮 ---------------------------------------------------------------- */
+#back{
+  position:fixed;top:12px;left:12px;z-index:999;
+  padding:8px 18px;
+  font-family:'ZCOOL KuaiLe','PingFang SC',sans-serif;
+  font-size:18px;letter-spacing:1px;color:#fff;text-decoration:none;
+  background:#b38aff;                       /* 温柔紫底 */
+  border:6px solid #ffbfe6;                 /* 粉色粗边 */
+  border-radius:28px;
+  box-shadow:0 0 0 4px #ffeaf9 inset;       /* 内嵌浅粉→蕾丝感 */
+  transition:transform .2s,box-shadow .2s;
+}
+#back:hover{transform:translateY(-3px);box-shadow:0 0 0 6px #ffeef9 inset;}
+#back::before,#back::after{                /* 顶部 & 底部小蕾丝 */
+  content:"";position:absolute;left:-10px;right:-10px;height:6px;
+  background:repeating-linear-gradient(90deg,transparent 0 10px,#ffbfe6 10px 20px);
+  border-radius:3px}
+#back::before{top:-6px}#back::after{bottom:-6px}
+
+/* 宠物房原样式 -------------------------------------------------------------- */
 #card{width:300px;padding:22px;text-align:center;border:3px dashed #ff94e4;
       background:#fffbea;border-radius:16px;box-shadow:0 6px 14px rgba(0,0,0,.12)}
 #petImg{width:160px;height:160px;border-radius:12px;object-fit:cover;background:#ffe}
@@ -22,6 +49,9 @@ button span{font-size:14px;margin-top:2px}button:active{transform:scale(.93)}
 </style>
 </head>
 <body>
+
+<!-- 返回主界面按钮 -->
+<a id="back" href="../index.html">回花园找小猫玩～</a>
 
 <div id="card">
   <img id="petImg" src="" alt="pet">
@@ -41,7 +71,7 @@ button span{font-size:14px;margin-top:2px}button:active{transform:scale(.93)}
 <script>
 window.addEventListener('DOMContentLoaded',()=>{
 
-/* —— 四张动作图 + 新的初始图 —— */
+/* —— 四张动作图 + 初始图 —— */
 const imgs={
   idle :'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/89C44DBD-1A2E-4AE3-8D3F-085FD581EEE2.png',
   pet  :'https://raw.githubusercontent.com/killa2025/pet-room/refs/heads/main/IMG_2281.jpeg',
@@ -67,13 +97,12 @@ function render(){
 }
 petImg.src=imgs.idle; render();
 
-/* 按钮行为——不再 setTimeout 切回 idle */
 $('eatBtn').onclick = ()=>{petImg.src=imgs.eat;   inc('hunger',20);inc('mood',5);  flash(hBar);flash(mBar);render();};
 $('petBtn').onclick = ()=>{petImg.src=imgs.pet;   inc('mood',15);                  flash(mBar);render();};
 $('bathBtn').onclick= ()=>{petImg.src=imgs.bath;  inc('clean',25);inc('mood',5);   flash(cBar);flash(mBar);render();};
 $('restBtn').onclick = ()=>{petImg.src=imgs.sleep;inc('energy',25);inc('mood',5);  flash(eBar);flash(mBar);render();};
 
-/* 每分钟自然衰减（如不需要可注释） */
+/* 每分钟自然衰减 */
 setInterval(()=>{inc('hunger',-2);inc('mood',-1);inc('clean',-1);inc('energy',-1);render();},60000);
 
 });
